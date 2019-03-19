@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>水质数据综合显示</title>
+    
+    <script src="../../layuiadmin/js/jquery.min.js"></script>
+
+    <script src="../../layuiadmin/js/echarts.js"></script>
+    
+    <!-- <link href="../../layuiadmin/css/bootstrap.css" rel="stylesheet" />
+    <script src="../../layuiadmin/js/bootstrap.js"></script>
+
+    <link href="../../layuiadmin/css/bootstrap-table.css" rel="stylesheet"/>
+    <script src="../../layuiadmin/js/bootstrap-table.js"></script>
+    <script src="../../layuiadmin/js/bootstrap-table-zh-CN.js"></script>
+
+    <link href="../../layuiadmin/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <script src="../../layuiadmin/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../layuiadmin/js/bootstrap-datetimepicker.zh-CN.js"></script> -->
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <script src="../../layuiadmin/layui/layui.js"></script>
+    <!-- <script>
+    layui.config({
+        base: '../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'senior']);
+    </script>  -->
+</head>
+<body>
+<div id="chart_ph" style="height: 300px;width: 500px;"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+
+            <div class="layui-card">
+                <div class="layui-card-header">标准折线图</div>
+                <div class="layui-card-body">
+                    卡片式面板面板通常用于非白色背景色的主体内<br>
+                    从而映衬出边框投影
+
+                    <div id="chart_ph"></div>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">标准折线图</div>
+                <div class="layui-card-body">
+                    <div id="chart_water_temperature" ></div>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">标准折线图</div>
+                <div class="layui-card-body">
+                    <div id="chart_ship_temperature" ></div>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">标准折线图</div>
+                <div class="layui-card-body">
+                    <div id="chart_velocity" ></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    function sleep(d){
+        for (var t = Date.now(); Date.now() - t <= d; );
+    }
+
+    // 初始化图表标签
+    var myChart_ph = echarts.init(document.getElementById('chart_ph'));
+    //myChart.showLoading();
+    var options_ph = {
+                        title:{
+                            text:'PH值'
+                        },
+                        legend:{
+                            data:['时间']
+                        },
+                        //X轴设置
+                        xAxis:{
+                            name :'时间',
+                            data: (function (){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                var now = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+                                //只显示秒
+                                //var now = (new Date().getSeconds());
+                                //sleep(1000);
+                                res.push(now); 
+                            }
+                            return res;
+                        })()
+                        },
+                        //y轴不设置意味着y轴的数值随传进来参数最值自动给出波动范围
+                        yAxis:{
+                        },
+                        //name=legend.data的时候才能显示图例
+                        series:[{
+                            name:'时间',
+                            type:'line',
+                            data:(function(){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                res.push(0);
+                            }
+                            return res;
+                        })()
+                        }]
+                };      
+                myChart_ph.setOption(options_ph);
+    //***********************************************************//
+    // 初始化图表标签
+    var myChart_water_temperature = echarts.init(document.getElementById('chart_water_temperature'));
+    //myChart.showLoading();
+    var options_water_temperature = {
+                        title:{
+                            text:'水温'
+                        },
+                        legend:{
+                            data:['时间']
+                        },
+                        //X轴设置
+                        xAxis:{
+                            name :'时间',
+                            data: (function (){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                var now = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+                                //只显示秒
+                                //var now = (new Date().getSeconds());
+                                //sleep(1000);
+                                res.push(now); 
+                            }
+                            return res;
+                        })()
+                        },
+                        //y轴不设置意味着y轴的数值随传进来参数最值自动给出波动范围
+                        yAxis:{
+                        },
+                        //name=legend.data的时候才能显示图例
+                        series:[{
+                            name:'时间',
+                            type:'line',
+                            data:(function(){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                res.push(0);
+                            }
+                            return res;
+                        })()
+                        }]
+                };      
+                myChart_water_temperature.setOption(options_water_temperature);
+    //************************************************************//
+    // 初始化图表标签
+    var myChart_ship_temperature = echarts.init(document.getElementById('chart_ship_temperature'));
+    //myChart.showLoading();
+    var options_ship_temperature = {
+                        title:{
+                            text:'船体温度'
+                        },
+                        legend:{
+                            data:['时间']
+                        },
+                        //X轴设置
+                        xAxis:{
+                            name :'时间',
+                            data: (function (){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                var now = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+                                //只显示秒
+                                //var now = (new Date().getSeconds());
+                                //sleep(1000);
+                                res.push(now); 
+                            }
+                            return res;
+                        })()
+                        },
+                        //y轴不设置意味着y轴的数值随传进来参数最值自动给出波动范围
+                        yAxis:{
+                        },
+                        //name=legend.data的时候才能显示图例
+                        series:[{
+                            name:'时间',
+                            type:'line',
+                            data:(function(){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                res.push(0);
+                            }
+                            return res;
+                        })()
+                        }]
+                };      
+                myChart_ship_temperature.setOption(options_ship_temperature);
+    //************************************************************//
+    // 初始化图表标签
+    var myChart_velocity = echarts.init(document.getElementById('chart_velocity'));
+    //myChart.showLoading();
+    var options_velocity = {
+                        title:{
+                            text:'船速'
+                        },
+                        legend:{
+                            data:['时间']
+                        },
+                        //X轴设置
+                        xAxis:{
+                            name :'时间',
+                            data: (function (){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                var now = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+                                //只显示秒
+                                //var now = (new Date().getSeconds());
+                                //sleep(1000);
+                                res.push(now); 
+                            }
+                            return res;
+                        })()
+                        },
+                        //y轴不设置意味着y轴的数值随传进来参数最值自动给出波动范围
+                        yAxis:{
+                        },
+                        //name=legend.data的时候才能显示图例
+                        series:[{
+                            name:'时间',
+                            type:'line',
+                            data:(function(){
+                            var res = [];
+                            var len = 20;
+                            while (len--) {
+                                res.push(0);
+                            }
+                            return res;
+                        })()
+                        }]
+                };      
+                myChart_velocity.setOption(options_velocity);
+</script>
+</html>
+
+
+
+

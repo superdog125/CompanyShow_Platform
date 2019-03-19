@@ -1,0 +1,261 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+ 	<script src="../../layuiadmin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FlFCVMVe9aXsukuD7dH8xqUSm4fbd2cT"></script>
+
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/modules/layer/default/layer.css" media="all">
+    <script src="../../layuiadmin/layui/lay/modules/jquery.js"></script>
+    <script src="../../layuiadmin/layui/lay/modules/layer.js"></script>
+
+	<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <script src="../../layuiadmin/layui/layui.js"></script>
+
+	<title>AUTO_ship位置显示</title>
+	<style type="text/css">
+		body {
+		    height: 100%;
+		    margin: 0;
+		    padding: 0;
+		    font-family: Times New Roman, serif;
+		}
+		#allmap {
+		    height: 100%;
+		    width: auto;
+		}
+		#control {
+		    position: absolute;
+		    /*bottom: 15px;*/
+		    bottom: 100px;
+		    left: 10px;
+		}
+		#layui-layer2 {
+			position: absolute; 
+			top: 20px;
+			left: 1080px;
+			height: 500px;
+			width: 270px;
+		}
+
+
+		#occur {
+			margin-top: 20px;
+		}
+
+		
+	</style>
+
+</head>
+
+<body>
+	<div class="container" id="allmap"></div>
+
+	<div id="control">
+		<button id="open" class="layui-btn layui-btn-radius layui-btn-normal">打开坐标拾取栏</button>
+		<button id="close" class="layui-btn layui-btn-radius layui-btn-normal">关闭坐标拾取栏</button>
+	</div>
+
+	<div class="layui-layer layui-layer-page layui-layer-dir" id="layui-layer2" type="page"  contype="object">
+		<div class="layui-layer-title" style="cursor: move;">坐标采集列表</div>
+		<div class="layui-layer-content" id="longitude_latitude">
+				<form id="occur" class="layui-form" action="">
+			    	<div class="layui-form-item">
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude1">
+						</div>
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude1">
+						</div>
+					</div>
+
+
+					<div class="layui-form-item">
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude2">
+						</div>
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude2">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude3">
+						</div>
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude3">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<!-- <label class="layui-form-label" style="margin-left: 20px;margin-right: 20px;">终点</label> -->
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude4">
+						</div>
+						<div class="layui-input-block" style="margin-left: 20px;margin-right: 20px;">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude4">
+						</div>
+					</div>
+
+					<!-- <div class="layui-form-item">
+	                    <label class="layui-form-label">验证必填项</label>
+	                    <div class="layui-input-block">
+	                        <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+	                    </div>
+               		 </div> -->
+			
+
+					<!-- <div class="layui-form-item layui-row">
+						<label class="layui-form-label">经度</label>
+						<div class="layui-input-block">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude3">
+						</div>
+						<label class="layui-form-label">纬度</label>
+						<div class="layui-input-block">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude3">
+						</div>
+					</div> -->
+		
+
+					<!--<div class="layui-form-item">
+			    	<div class="layui-card-body layui-row layui-col-space10">
+			    		<div class="layui-col-md6">
+						<label class="layui-form-label">经度</label>
+						<div class="layui-input-block">
+							<input type="text" name="longitude" required lay-verify="required" placeholder="经度" autocomplete="off" class="layui-input" id="longitude">
+						</div>
+						</div>
+						<div class="layui-col-md6">
+						<label class="layui-form-label">纬度</label>
+						<div class="layui-input-block">
+							<input type="text" name="latitude" required lay-verify="required" placeholder="纬度" autocomplete="off" class="layui-input" id="latitude">
+						</div>
+						</div>
+					</div>
+					</div> -->
+
+					<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="formDemo">发送至服务器</button>
+					</div>
+					</div>
+				</form>
+		</div>
+	</div> 
+
+</body>
+<script type="text/javascript">
+	//此下前三行是添加一切地图插件功能的必须前提
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(120.350426,30.317061);
+	map.centerAndZoom(point,15);
+	map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+	//定位方案二
+	// 添加带有定位的导航控件
+	var navigationControl = new BMap.NavigationControl({
+	   // 靠左上角位置
+	    anchor: BMAP_ANCHOR_TOP_LEFT,
+	   // LARGE类型
+	    type: BMAP_NAVIGATION_CONTROL_LARGE,
+	   // 启用显示定位
+	    enableGeolocation: true
+	});
+	map.addControl(navigationControl);
+	// 添加定位控件
+	var geolocationControl = new BMap.GeolocationControl();
+	geolocationControl.addEventListener("locationSuccess", function(e){
+	   // 定位成功事件
+	    var address = '';
+	    address += e.addressComponent.province;
+	    address += e.addressComponent.city;
+	    address += e.addressComponent.district;
+	    address += e.addressComponent.street;
+	    address += e.addressComponent.streetNumber;
+	    alert("当前定位地址为：" + address);
+	});
+	geolocationControl.addEventListener("locationError",function(e){
+	    // 定位失败事件
+	    alert(e.message);
+	});
+	map.addControl(geolocationControl);
+
+
+	// $("#open").bind("click",function(){ 
+ //      //多窗口模式，层叠置顶
+ //      var index = layer.open({
+ //        type: 2 //此处以iframe举例
+ //        ,title: '当你选择该窗体时，即会在最顶端'
+ //        ,area: ['390px', '600px']
+ //        ,shade: 2
+ //        ,maxmin: true
+ //        ,skin: 'layui-layer-rim'
+ //        ,scrollbar: true
+ //        ,offset: [ //为了演示，随机坐标
+ //          Math.random()*($(window).height()-300)
+ //          ,Math.random()*($(window).width()-390)
+ //        ] 
+ //        ,content: $("#layui-layer2")
+ //        ,success: function(layero){
+ //          layer.setTop(layero); //重点2
+ //        }
+ //      });
+ //    });
+
+ 	// $("#open").bind("click",function(){ 
+  //       top.layui.admin.popupRight({
+  //           success: function () {
+  //               $('#occur').html('<div style="padding: 20px;">放入内容</div>');
+  //           }
+  //       });
+
+	
+
+
+	function addMarker(point){
+		var marker = new BMap.Marker(point);
+		map.addOverlay(marker);
+	}
+
+	var i = 0;
+	map.addEventListener("click",function(e){
+        addMarker(e.point);
+        i++;
+        // alert('总共点击了'+i+'次');
+        switch(i){
+			case 1:
+			   $("#longitude1").val(e.point.lng);
+		  	   $("#latitude1").val(e.point.lat);
+			   break;
+			case 2:
+			   $("#longitude2").val(e.point.lng);
+		  	   $("#latitude2").val(e.point.lat);
+			   break;
+			case 3:
+			   $("#longitude3").val(e.point.lng);
+		  	   $("#latitude3").val(e.point.lat);
+			   break;
+			case 4:
+			   $("#longitude4").val(e.point.lng);
+		  	   $("#latitude4").val(e.point.lat);
+			   break;
+		}
+        return i;
+ 	});
+
+
+	//输入指定两点进行路径规划
+	// var walking = new BMap.WalkingRoute(map, {renderOptions:{map: map, panel: "result-panel", autoViewport: true}});
+	// walking.search("杭州电子科技大学", "灵隐寺");
+
+	//判断浏览区是否支持canvas
+    function isSupportCanvas(){
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+</script>
+</html>
+
+

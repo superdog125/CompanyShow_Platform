@@ -1,0 +1,43 @@
+*{
+	margin: 0px;
+	padding: 0px;
+}
+
+#formSearch{
+	position: absolute;
+	top: 20px;
+	left: 300px;
+}
+
+#chart_ph{
+	position: absolute;
+	top: 90px;
+	left: 90px;
+	height: 350px;
+	width: 550px;
+}
+
+#chart_water_temperature{
+	position: absolute;
+	top: 90px;
+	right: 90px;
+	height: 350px;
+	width: 550px;
+}
+
+#chart_ship_temperature{
+	position: absolute;
+	top: 400px;
+	left: 90px;
+	height: 350px;
+	width: 550px;
+}
+
+#chart_velocity{
+	position: absolute;
+	top: 400px;
+	right: 90px;
+	height: 350px;
+	width: 550px;
+}
+

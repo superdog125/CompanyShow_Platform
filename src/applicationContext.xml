@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-2.5.xsd
+						http://www.springframework.org/schema/aop 
+       					http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- 通过context标签引入 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+	<!-- 配置C3P0连接池=============================== -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+	           <value>com/domain/User.hbm.xml</value>
+			   <value>com/domain/Driver.hbm.xml</value>
+			   <value>com/domain/Car.hbm.xml</value>
+			   <value>com/domain/Techer.hbm.xml</value>
+			   <value>com/domain/CarInfo.hbm.xml</value>
+			</list>	
+		</property>
+	</bean>	
+		
+	<!-- 无hibernate.cfn开发时,Dao层继承HibernateDaoSupport,注入的是sessionFactory进行使用,可直接生成HibernateTemplate -->
+	
+	<!-- 配置验证码的Action -->
+	<bean id="checkImgAction" class="com.action.varcode.CheckImgAction" scope="prototype">
+
+	</bean>
+	
+	<!-- login -->
+	<!-- dao -->
+	<bean id="loginDao" class="com.dao.impl.login.LoginDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- service -->
+	<bean id="loginService" class="com.service.impl.login.LoginServiceImpl">
+		<property name="loginDao" ref="loginDao"></property>
+	</bean>
+	<!-- action类配置区 -->
+	<bean id="loginAction" class="com.action.login.LoginAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+	</bean>
+	<bean id="registerAction" class="com.action.login.RegisterAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+		<property name="userService" ref="userService"></property>
+	</bean>
+	<bean id="repassAction" class="com.action.login.RepassAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+	</bean>
+	<bean id="exitAction" class="com.action.login.ExitAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+	</bean>
+	
+	
+	<!-- user -->
+	<!-- dao -->
+	<bean id="userDao" class="com.dao.impl.user.UserDaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- service -->
+	<bean id="userService" class="com.service.impl.user.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	<!-- action类配置区 -->
+	<bean id="userAction" class="com.action.user.UserAction"  scope="prototype">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	
+	
+	
+	
+	<!-- 事务管理 -->
+	<!-- 1.事务管理器: HibernateTransactionManager -->
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 2.事务详情 给ABC进行具体事务设置-->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="execute"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 3.AOP编程 ABCD中筛选ABC -->
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.service..*.*(..))" />
+	</aop:config>
+</beans>

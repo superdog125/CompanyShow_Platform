@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.domain.Techer" table="techer">
+        <id name="tid" type="java.lang.Integer">
+            <column name="tid" />
+            <generator class="native" ></generator>
+        </id>
+        <property name="tname" type="java.lang.String">
+            <column name="tname" />
+        </property>
+        <property name="tphone" type="java.lang.String">
+            <column name="tphone" />
+        </property>
+        <property name="tpassword" type="java.lang.String">
+            <column name="tpassword" />
+        </property>
+        <property name="tworkyear" type="java.lang.String">
+            <column name="tworkyear" />
+        </property>
+        <property name="tsex" type="java.lang.String">
+            <column name="tsex" />
+        </property>
+        <property name="tage" type="java.lang.Integer">
+            <column name="tage" />
+        </property>
+    </class>
+</hibernate-mapping>

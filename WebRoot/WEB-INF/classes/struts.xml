@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+		
+	<!-- 告知Struts2运行时使用Spring来创建对象 -->  
+	<constant name="struts.objectFactory.spring.autoWire" value="type" />
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+    <constant name="struts.i18n.encoding" value="UTF-8" /> 
+    <constant name="struts.devMode" value="true" />
+ 
+ 	<package name="cms" extends="struts-default" namespace="/">
+		<interceptors>
+		<!-- 注册拦截器 -->
+				<interceptor name="privilegeInterceptor" class="com.web.interceptor.PrivilegeInterceptor"></interceptor>
+				
+		<!-- 配置拦截器栈 -->
+				<interceptor-stack name="myStack">
+					<interceptor-ref name="privilegeInterceptor">
+						<param name="excludeMethods">execute,repass1,repass2</param>
+					</interceptor-ref>
+					<interceptor-ref name="defaultStack"></interceptor-ref>
+				</interceptor-stack>
+			</interceptors>
+		<!-- 指定默认拦截器栈 -->
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		<!-- 全局结果集配置 -->
+		<global-results>
+			<result name="toLogin" type="redirect" >/login.jsp</result>
+		</global-results>
+	</package>
+	
+	<package name="login"  extends="cms" >	
+		<!-- 验证码的Action -->
+		<action name="checkImg" class="checkImgAction">
+		</action>
+	
+		 <action name="register" class="registerAction">
+		    <result name="success" type="redirect">/login.jsp</result>
+		    <result name="input" type="redirect">/views/user/reg.jsp</result>
+		 </action>
+		 <action name="login" class="loginAction">
+		    <result name="success" type="redirect">/home.jsp</result>
+		    <result name="input">/login.jsp</result>
+		    <result name="checkcodeFail">/login.jsp</result>
+		 </action>
+		 <!-- 找回密码Step1: 先确认要找回的手机号码是否正确 -->
+		 <action name="repass1" class="repassAction" method="repass1">
+		    <result name="success" type="redirect">/views/user/forget2.jsp</result>
+		    <result name="input" type="redirect">/views/user/forget1.jsp</result>
+		 </action>
+		 <!-- 找回密码Step2: 再进行对此用户的密码更改 -->
+		 <action name="repass2" class="repassAction" method="repass2">
+		    <result name="success" type="redirect">/login.jsp</result>
+		    <result name="input" type="redirect">/views/user/forget2.jsp</result>
+		 </action>
+		 <action name="exit" class="exitAction">
+		    <result name="success" type="redirect">/login.jsp</result>
+		    <result name="input" type="redirect">/home.jsp</result>
+		 </action>
+	</package>
+	
+	
+	<package name="car"  extends="cms">
+		 <action name="car_add" class="carAction" method="add">
+		    <result name="success" type="redirect">/views/show/table_car.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_car.jsp</result>
+		 </action>
+		 <action name="car_delete" class="carAction" method="delete">
+		    <result name="success" type="redirect">/views/show/table_car.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_car.jsp</result>
+		 </action>
+		 <action name="car_update" class="carAction" method="update">
+		    <result name="success" type="redirect">/views/show/table_car.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_car.jsp</result>
+		 </action>
+		 <action name="car_find" class="carAction" method="find">
+		 </action>
+	</package>
+	
+	
+	<package name="user"  extends="cms">
+		 <action name="user_add" class="userAction" method="add">
+		    <result name="success" type="redirect">/views/show/table_admin.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_admin.jsp</result>
+		 </action>
+		 <action name="user_delete" class="userAction" method="delete">
+		    <result name="success" type="redirect">/views/show/table_admin.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_admin.jsp</result>
+		 </action>
+		 <action name="user_update" class="userAction" method="update">
+		    <result name="success" type="redirect">/views/show/table_admin.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_admin.jsp</result>
+		 </action>
+		 <action name="user_find" class="userAction" method="find">
+		 </action>
+	</package>
+	
+  
+	<package name="driver"  extends="cms">
+		 <action name="driver_add" class="driverAction" method="add">
+		    <result name="success" type="redirect">/views/show/table_driver.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_driver.jsp</result>
+		 </action>
+		 <action name="driver_delete" class="driverAction" method="delete">
+		    <result name="success" type="redirect">/views/show/table_driver.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_driver.jsp</result>
+		 </action>
+		 <action name="driver_update" class="driverAction" method="update">
+		    <result name="success" type="redirect">/views/show/table_driver.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_driver.jsp</result>
+		 </action>
+		 <action name="driver_find" class="driverAction" method="find">
+		 </action>
+	</package>
+	
+	
+	<package name="techer"  extends="cms">
+		 <action name="techer_add" class="techerAction" method="add">
+		    <result name="success" type="redirect">/views/show/table_tech.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_tech.jsp</result>
+		 </action>
+		 <action name="techer_delete" class="techerAction" method="delete">
+		    <result name="success" type="redirect">/views/show/table_tech.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_tech.jsp</result>
+		 </action>
+		 <action name="techer_update" class="techerAction" method="update">
+		    <result name="success" type="redirect">/views/show/table_tech.jsp</result>
+		    <result name="input" type="redirect">/views/show/table_tech.jsp</result>
+		 </action>
+		 <action name="techer_find" class="techerAction" method="find">
+		 </action>
+	</package>
+	
+	
+	<package name="carinfo"  extends="cms">
+		 <action name="carinfo_add" class="carInfoAction" method="add">
+		    <result name="success">/views/show/table_carinfo.jsp</result>
+		    <result name="input">/views/show/table_carinfo.jsp</result>
+		 </action>
+		 <action name="carinfo_find" class="carInfoAction" method="find">
+		 </action>
+		 <action name="carinfo_delete" class="carInfoAction" method="delete">
+		    <result name="success">/views/show/table_carinfo.jsp</result>
+		    <result name="input">/views/show/table_carinfo.jsp</result>
+		 </action>
+		 <action name="carinfo_update" class="carInfoAction" method="update">
+		    <result name="success">/views/show/table_carinfo.jsp</result>
+		    <result name="input">/views/show/table_carinfo.jsp</result>
+		 </action>
+	</package>
+	
+</struts>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.domain.Driver" table="driver">
+        <id name="did" type="java.lang.Integer">
+            <column name="did" />
+            <generator class="native" ></generator>
+        </id>
+        <property name="dname" type="java.lang.String">
+            <column name="dname" />
+        </property>
+        <property name="dphone" type="java.lang.String">
+            <column name="dphone" />
+        </property>
+        <property name="dpassword" type="java.lang.String">
+            <column name="dpassword" />
+        </property>
+        <property name="dworkyear" type="java.lang.String">
+            <column name="dworkyear" />
+        </property>
+        <property name="dsex" type="java.lang.String">
+            <column name="dsex" />
+        </property>
+        <property name="dage" type="java.lang.Integer">
+            <column name="dage" />
+        </property>
+        <set name="carinfo" table="carinfo" lazy="false" fetch="select">
+        	<key column="did"></key>
+        	<one-to-many class="com.domain.CarInfo"/>
+        </set>
+    </class>
+</hibernate-mapping>

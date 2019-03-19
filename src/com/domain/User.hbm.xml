@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.domain.User" table="admin">
+        <id name="uid" type="java.lang.Integer">
+            <column name="aid" />
+            <generator class="native" ></generator>
+        </id>
+        <property name="loginName" type="java.lang.String">
+            <column name="aname" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="atname" />
+        </property>
+        <property name="telephone" type="java.lang.String">
+            <column name="aphone" />
+        </property>
+        <property name="loginPwd" type="java.lang.String">
+            <column name="apassword" />
+        </property>
+    </class>
+</hibernate-mapping>

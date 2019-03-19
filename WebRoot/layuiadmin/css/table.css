@@ -1,0 +1,17 @@
+*{
+	margin: 0px;
+	padding: 0px;
+}
+body{
+	margin: 0px;
+}
+.container{
+	height: 632px;
+	background: #fff;
+
+}
+.container #one{
+    position: relative;
+    top: 100px;
+    
+}

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>Auto_ship datashow</title>
+    <script src="../../layuiadmin/js/jquery.min.js"></script>
+    <script src="../../layuiadmin/js/FileSaver.min.js"></script>
+    <script src="../../layuiadmin/js/xlsx.core.min.js"></script>
+    
+    <link href="../../layuiadmin/css/bootstrap.css" rel="stylesheet" />
+    <script src="../../layuiadmin/js/bootstrap.js"></script>
+
+    <link href="../../layuiadmin/css/bootstrap-table.css" rel="stylesheet"/>
+    <script src="../../layuiadmin/js/bootstrap-table.js"></script>
+    <script src="../../layuiadmin/js/bootstrap-table-zh-CN.js"></script>
+
+    <script src="../../layuiadmin/js/tableExport.js"></script>
+    <script src="../../layuiadmin/js/bootstrap-table-export.js"></script>
+    <link href="../../layuiadmin/css/tableExport.css" rel="stylesheet" />
+
+    <link href="../../layuiadmin/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <script src="../../layuiadmin/js/bootstrap-datetimepicker.js"></script>
+    <script src="../../layuiadmin/js/bootstrap-datetimepicker.zh-CN.js"></script>
+</head>
+<body>
+    <div class="panel-body" style="padding-bottom:0px;">
+        <div class="panel panel-danger">
+            <div class="panel-heading">查询条件</div>
+            <div class="panel-body">
+                
+                <form  id="formSearch" class="form-horizontal">
+                    <div class="row form-group" style="margin-top:15px">
+                        <label class="col-sm-1 control-label" for="date1">起始:</label>
+                        <div class="col-sm-3">   
+                        <div class="input-group date" id='date1' style="position:relative;">  
+                            <input type="text" class="form-control" name="startTime" readonly>
+                            <span class="input-group-addon">  
+                                <i class="glyphicon glyphicon-calendar"></i>  
+                            </span>  
+                        </div>
+                        </div>
+        
+                        <label class="col-sm-1 control-label" for="date2">结束:</label>
+                        <div class="col-sm-3">
+                        <div class="input-group date" id='date2' style="position:relative;">  
+                            <input type="text" class="form-control" name="endTime" readonly>        
+                            <span class="input-group-addon">  
+                                <i class="glyphicon glyphicon-calendar"></i>  
+                            </span>  
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4" style="text-align:left;">
+                            <input type="button" style="margin-left:50px" id="search" class="btn btn-primary" value="查询" onclick="queryData()">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>       
+
+        <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+            </button>
+            <button id="btn_edit" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
+            </button>
+            <button id="btn_delete" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+            </button>
+        </div>
+
+
+        <div id="atable">
+        <table id="table" class="table table-hover table-bordered" data-toggle="table" data-url="" >
+        </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+      function queryData() {
+          //这里一定需要先销毁表格，不然会导致加载不出数据
+          $('#table').bootstrapTable('destroy');
+          $("#table").bootstrapTable({ // 对应table标签的id
+          ajax: function query(result) {
+              $.ajax({
+                      //几个参数需要注意一下
+                      type: "post",//方法类型
+                      dataType: "json",//预期服务器返回的数据类型
+                      //contentType: "application/json;charset=utf-8",
+                      // url: "http://106.14.149.68:8080/My_UnmannedShip/demo3",
+                      url: "http://localhost:8080/My_UnmannedShip/demo3",
+                      // url: "http://localhost:8080/Ajax_Table/demo2" ,
+                      data: {"startTime": $("#date1 input[name=startTime]").val(),"endTime": $("#date2 input[name=endTime]").val()},
+                      //data: $("input:text").attr("name").serialize(),
+                      //data: JSON.stringify($("input:text").attr("name")),
+                      //data: JSON.stringify($("#formSearch").attr('name')),
+                      success: function (msg) {
+                          console.log(msg);//打印服务端返回的数据(调试用)
+                          console.log($("#date1 input[name=startTime]").val());
+                          if (result.resultCode == 200) {
+                              alert("连接成功");
+                          };
+                          result.success({
+                            row: msg
+                          });
+                          $('#table').bootstrapTable('load', msg);
+                      },
+                      error : function(msg) {
+                          console.log(msg);
+                          alert("没有连接成功！");
+                      }
+                  });
+
+          },
+          cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+          striped: true,  //表格显示 条纹，默认为false
+          pagination: true, // 在表格底部显示分页组件，默认false
+          pageList: [10, 25, 50], // 设置页面可以显示的数据条数
+          pageSize: 10, // 页面数据条数
+          pageNumber: 1, // 首页页码
+          toolbar: '#toolbar',  //工具按钮用哪个容器
+          search: true,   //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+          strictSearch: true,
+          showRefresh: true,   //是否显示刷新按钮
+          showExport: true, //是否显示导出按钮
+          exportDataType: "all", //导出表格数据方式，basic'导出当前页, 'all'导出全部, 'selected'导出选中项
+          showColumns: true,    //是否显示所有列
+          showToggle: false,      //是否显示详细视图和列表视图的切换按钮
+          cardView: false,   //是否显示详细视图
+          detailView: false,  //是否显示父子表
+          searchOnEnterKey: true,
+          sidePagination: 'client', // 设置为服务器端分页
+          uniqueId: "id",     //每一行的唯一标识，一般为主键列
+          columns: [
+            {
+                checkbox: true, // 显示一个勾选框
+                align: 'center' // 居中显示
+            }, {
+                sortable: true,
+                field: 'id', // 返回json数据中的name
+                title: 'Id', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                sortable: true,
+                field: 'ph',
+                title: 'Ph值',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'muddy',
+                title: '浑浊度',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'water_temperature',
+                title: '水温',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'ship_temperature',
+                title: '船体温度',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'velocity',
+                title: '船速',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'time',
+                title: '航行时间',
+                align: 'center',
+                valign: 'middle'
+            }, {
+                sortable: true,
+                field: 'gps',
+                title: '经纬度',
+                align: 'center',
+                valign: 'middle'
+            },
+          ],
+          onLoadSuccess: function(){  //加载成功时执行
+              console.info("加载成功");
+          },
+          onLoadError: function(){  //加载失败时执行
+              console.info("加载数据失败");
+          }
+        });
+
+      }                                 
+
+      
+
+      $('#date1').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            initialDate: new Date(),    //初始化当前日期
+            autoclose: true,        //选中自动关闭
+            todayBtn: true      //显示今日按钮
+      });
+      $('#date2').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            initialDate: new Date(),    //初始化当前日期
+            autoclose: true,        //选中自动关闭
+            todayBtn: true      //显示今日按钮
+      });
+
+      
+      function initTable() {  
+          $('#table').bootstrapTable('destroy');
+          $("#table").bootstrapTable({ // 对应table标签的id
+            ajax: function ajaxReqDate(result) {
+            //console.log(result);
+            $.ajax({
+                    type: "get",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    //contentType: "application/json;charset=utf-8",
+                    // url: "http://localhost:8080/Ajax_Table/demo1" ,
+                    url: "http://106.14.149.68:8080/My_UnmannedShip/demo2" ,
+                    data: "hello world",
+                    //data: JSON.stringify($("#SearchParma")),
+                    success: function (msg) {
+                        console.log(msg);//打印服务端返回的数据(调试用)
+                        if (result.resultCode == 200) {
+                            alert("连接成功");
+                        };
+                        result.success({
+                          row: msg
+                        });
+                        $('#table').bootstrapTable('load', msg);
+                    },
+                    error : function(msg) {
+                        console.log(msg);
+                        alert("没有连接成功！");
+                    }
+                });
+
+            },
+            cache: true, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示 条纹，默认为false
+            pagination: true, // 在表格底部显示分页组件，默认false
+            pageList: [10, 25, 50], // 设置页面可以显示的数据条数
+            pageSize: 10, // 页面数据条数
+            pageNumber: 1, // 首页页码
+            toolbar: '#toolbar',  //工具按钮用哪个容器
+            search: true,   //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            showRefresh: true,   //是否显示刷新按钮
+            showExport: true, //是否显示导出按钮
+            exportDataType: "all", //导出表格数据方式，basic'导出当前页, 'all'导出全部, 'selected'导出选中项
+            showColumns: true,    //是否显示所有列
+            showToggle: false,      //是否显示详细视图和列表视图的切换按钮
+            cardView: false,   //是否显示详细视图
+            detailView: false,  //是否显示父子表
+            searchOnEnterKey: true,
+            sidePagination: 'client', // 设置为服务器端分页
+            uniqueId: "id",     //每一行的唯一标识，一般为主键列
+            columns: [
+              {
+                  checkbox: true, // 显示一个勾选框
+                  align: 'center' // 居中显示
+              }, {
+                  sortable: true,
+                  field: 'id', // 返回json数据中的name
+                  title: 'Id', // 表格表头显示文字
+                  align: 'center', // 左右居中
+                  valign: 'middle' // 上下居中
+              }, {
+                  sortable: true,
+                  field: 'ph',
+                  title: 'Ph值',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'muddy',
+                  title: '浑浊度',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'water_temperature',
+                  title: '水温',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'ship_temperature',
+                  title: '船体温度',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'velocity',
+                  title: '船速',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'time',
+                  title: '航行时间',
+                  align: 'center',
+                  valign: 'middle'
+              }, {
+                  sortable: true,
+                  field: 'gps',
+                  title: '经纬度',
+                  align: 'center',
+                  valign: 'middle'
+              },
+            ],
+            onLoadSuccess: function(){  //加载成功时执行
+                console.info("加载成功");
+            },
+            onLoadError: function(){  //加载失败时执行
+                console.info("加载数据失败");
+            }
+          });
+    }
+     
+
+    $(document).ready(function() {
+      initTable();
+
+      //$("#search").bind("click", queryData); 
+
+    });
+
+    </script>
+
+
+</body>
+</html>

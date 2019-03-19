@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true">
+    <class name="com.domain.Car" table="car" >
+        <id name="cid" type="java.lang.Integer">
+            <!-- <column name="cid" /> -->
+            <generator class="native" ></generator>
+        </id>
+        <property name="cbrand" type="java.lang.String">
+            <column name="cbrand" />
+        </property>
+        <property name="cnumber" type="java.lang.Integer">
+            <column name="cnumber" />
+        </property>
+        <property name="cfix" type="java.lang.String">
+            <column name="cfix" />
+        </property>
+        <property name="cproblem" type="java.lang.String">
+            <column name="cproblem" />
+        </property>
+        <property name="ccheck" type="java.lang.String">
+            <column name="ccheck" />
+        </property> 
+        <!-- carinfo在car表中没有，carinfo表的外键关联的是car的主键，所以carinfo不属于这个表，要声明其对应的表 -->
+        <set name="carinfo" table="carinfo" lazy="false" fetch="select" inverse="true">
+        	<key column="cid"></key>
+        	<one-to-many class="com.domain.CarInfo"/>
+        </set>
+
+    </class>
+</hibernate-mapping>
